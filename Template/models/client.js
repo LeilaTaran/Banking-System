@@ -28,7 +28,6 @@ const ClientSchema = new mongoose.Schema ({
         type: String,
         required: true,
     }
-
 });
 
 const model = mongoose.model('Client', ClientSchema);
