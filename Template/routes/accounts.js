@@ -56,6 +56,16 @@ router.put('/update', function (req, res, next) {
     });
 });
 
+// [6] Retunere en specifik kontos balance
+router.get('/:id/balance', async (req, res) => {
+    Account.findById({_id: req.params.id})
+        .then(account => {
+            res.status(200).json({
+                balance: account.balance
+            });
+        });
+});
+
 // DELETE ACCOUNT
 router.delete('/delete/:id', function(req, res, next){
     Account.findByIdAndRemove({_id: req.params.id}) //the mongo method will try to mach the ':id' in the URL to the _id in the database
