@@ -1,15 +1,30 @@
+const mongoose = require('mongoose');
 const express = require('express');
-const router = express.Router();
-const Account = require('../models/account');
+const app = express();
 
-// Implement a new endpoint, that will be able to return a specific account by id.
-router.get("/:id", async (req, res) => {
-    try {
-        const accounts = await Account.findById(req.params.id);
-        res.end("This is the endpoint for" + accounts);
-    } catch (err) {
-        console.log({message:err})
-    };
+const Account = require('../models/account');
+const Client = require('../models/client');
+const router = express.Router();
+
+router.post('/account', (req, res, next) => {
+    const account =  new Account({
+        client_id: req.params.id,
+        balance: req.params.balance,
+        alias: req.params.alias // AFLÆSER IKKE ALIAS
+    });
+    account.save().
+    then(result => {
+        console.log(result); // then we can see the result here
+        res.status(201).json({ //201 --> den er gået igennem
+            message: 'Account created'
+        });
+    })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            })
+        });
 });
 
 module.exports = router;

@@ -3,23 +3,11 @@ const mongoose = require('mongoose');
 // Jeg laver et "account" skema
 const AccountSchema = new mongoose.Schema({
     // Alle som strings, udover "id"
-    id: {
+    balance: {
         type: Number,
         required: true,
     },
-    firstName: {
-        type: String,
-        required: true,
-    },
-    lastName: {
-        type: String,
-        required: true,
-    },
-    street_address: {
-        type: String,
-        required: true,
-    },
-    city: {
+    alias: {
         type: String,
         required: true,
     }

@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const express = require('express');
+const router = express.Router();
 // Jeg laver et "client" skema
 
 const ClientSchema = new mongoose.Schema ({
@@ -9,18 +11,24 @@ const ClientSchema = new mongoose.Schema ({
          required: true,
      },
      */
-    client_id: {
+    _id: mongoose.Schema.Types.ObjectId,
+    firstName: {
         type: String,
         required: true,
     },
-    balance: {
-        type: Number,
+    lastName: {
+        type: String,
         required: true,
     },
-    alias: {
+    street_address: {
+        type: String,
+        required: true,
+    },
+    city: {
         type: String,
         required: true,
     }
+
 });
 
 const model = mongoose.model('Client', ClientSchema);
