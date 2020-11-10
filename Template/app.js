@@ -9,7 +9,7 @@ const app = express();
 const bodyParser = require('body-parser');
 
 
-app.use(bodyParser.json());
+app.use(bodyParser.json()); // body-parser can parse different kinds of body-forms, we want to accept JSON-data
 
 // Connection to DB
 mongoose.connect('mongodb://localhost:27017/bankingSystem', {
@@ -49,7 +49,7 @@ app.use('/client', clientRoutes);
 
 //IMPORT ACCOUNT ROUTES
 const accountRoutes = require('./routes/accounts');
-app.use('/account', accountRoutes);
+app.use('/accounts', accountRoutes);
 
 
 app.use('/', (req, res) => {

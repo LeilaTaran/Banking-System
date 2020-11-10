@@ -6,7 +6,7 @@ const Account = require('../models/account');
 const Client = require('../models/client');
 const router = express.Router();
 
-// [2]FIND ALL ACCOUNTS
+// [1] RETURNERER ET ARRAY AF ALLE KONTI
 router.get('/hent', async (req, res) => { //async fordi den venter på CREATE CLIENT løber igennem, før vi kan return clients
     try {
         // 1. return clients from database instead
@@ -17,14 +17,14 @@ router.get('/hent', async (req, res) => { //async fordi den venter på CREATE CL
     }
 });
 
-// FIND SPECIFIC ACCOUNT
-router.get('/:id', async (req, res) => { //async fordi den venter på CREATE CLIENT løber igennem, før vi kan return clients
-    Account.findById({_id: req.params.id}).then(function(account){
-            res.send(account)
-        });
+// [2] OPRETTE EN NY KONTO
+router.post('/', function(req, res){
+    Account.create(req.body).then(function(account){
+        res.send(account);
     });
+});
 
-// [1]CREATE ACCOUNT
+/* [2] OPRETTE EN NY KONTO GAMMEL
 router.post('/create/:client_id/:balance', (req, res, next) => {
     const account =  new Account({
         _id: new mongoose.Types.ObjectId(),
@@ -45,9 +45,16 @@ router.post('/create/:client_id/:balance', (req, res, next) => {
                 error: err
             })
         });
-});
+}); */
 
-// UPDATE ACCOUNT (OBS! SE OM MAN KUN KAN ÆNDRE PÅ BALANCE SENERE)
+// [3] RETURNERE EN SPECIFIK KONTO
+router.get('/:id', async (req, res) => { //async fordi den venter på CREATE CLIENT løber igennem, før vi kan return clients
+    Account.findById({_id: req.params.id}).then(function(account){
+            res.send(account)
+        });
+    });
+
+// [4] ÆNDRE EN KONTO. DET ER KUN BALANCEN SOM KAN ÆNDRES (OBS! SE OM MAN KUN KAN ÆNDRE PÅ BALANCE SENERE)
 router.put('/update', function (req, res, next) {
     Account.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(account){ //findByIdAndUpdate finder brugeren i databasen og opdatere dens oplysninger. Selve funktionen indtager et "id" som parameter. Her specificeres den ønskede id som skal opdateres. "req.body" angiver det body som opdatere den eksisterende information i databasen
         Client.findOne({_id: req.params.id}).then(function(account){ //
@@ -56,7 +63,15 @@ router.put('/update', function (req, res, next) {
     });
 });
 
-// [6] Retunere en specifik kontos balance
+// [5] SLETTE EN KONTO MED DET SPECIFIKKE ID
+router.delete('/delete/:id', function(req, res, next){
+    Account.findByIdAndRemove({_id: req.params.id}) //the mongo method will try to mach the ':id' in the URL to the _id in the database
+        .then(function(account){ // then it will remove the client with the match
+            res.send(account); // we want to send the client which we delete, and the record has been deleted from the database
+        });
+});
+
+// [6] RETURNERER EN SPECIFIK KONTOS BALANCE I FORM {BALANCE: 200}
 router.get('/:id/balance', async (req, res) => {
     Account.findById({_id: req.params.id})
         .then(account => {
@@ -66,12 +81,10 @@ router.get('/:id/balance', async (req, res) => {
         });
 });
 
-// DELETE ACCOUNT
-router.delete('/delete/:id', function(req, res, next){
-    Account.findByIdAndRemove({_id: req.params.id}) //the mongo method will try to mach the ':id' in the URL to the _id in the database
-        .then(function(account){ // then it will remove the client with the match
-            res.send(account); // we want to send the client which we delete, and the record has been deleted from the database
-        });
+// [7] ACCOUNT TRANSFER (PENDING)
+router.put('/transfer', function(req, res, next) {
 });
+
+
 
 module.exports = router;

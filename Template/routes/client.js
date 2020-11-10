@@ -14,8 +14,8 @@ router.get('/test', async (req, res) => {
     };
 });
 
-// [2]FIND CLIENT
-router.get('/hent', async (req, res) => { //async fordi den venter på CREATE CLIENT løber igennem, før vi kan return clients
+// [1] RETURNERE ET ARRAY AF ALLE KUNDER
+router.get('/', async (req, res) => { //async fordi den venter på CREATE CLIENT løber igennem, før vi kan return clients
     try {
         // 1. return clients from database instead
         return res.json(await Client.find({})
@@ -25,7 +25,14 @@ router.get('/hent', async (req, res) => { //async fordi den venter på CREATE CL
     }
 });
 
-// [1]CREATE CLIENT
+// [2] OPRETTE EN NY KUNDE
+router.post('/create', function(req,res){
+    Client.create(req.body).then(function(client){
+        res.send(client); //creates new instance of client-object and saves it in the database
+    });
+});
+
+/* [2] OPRETTE EN NY KUNDE GAMMEL
 router.post('/create/:firstName/:lastName/:street_address/:city', (req, res, next) => {
     const client =  new Client({
         _id: new mongoose.Types.ObjectId(),
@@ -47,9 +54,16 @@ router.post('/create/:firstName/:lastName/:street_address/:city', (req, res, nex
                 error: err
             })
         });
+}); */
+
+// [3] RETURNERER EN SPECIFIK KUNDE
+router.get('/:id', async (req, res) => { //async fordi den venter på CREATE CLIENT løber igennem, før vi kan return clients
+    Client.findById({_id: req.params.id}).then(function(client){
+        res.send(client)
+    });
 });
 
-// [3]UPDATE CLIENT
+// [4] OPDATERER EN KUNDES OPLYSNINGER
 /* Måden hvorpå denne funktion fungerer, er ved at der via postman sendes et "body" afsted med det, som man
     ønsker at opdatere. Herefter vil den enkelte del som sendes, blive opdateret i databasen. Selve
     funktionen vil retunere det opdaterede objekt */
@@ -62,7 +76,7 @@ router.put('/:id', function (req, res, next) {
 });
 
 
-// [4]DELETE CLIENT
+// [5] SLETTE KUNDEN MED DET SPECIFIKKE ID
 router.delete('/delete/:id', function(req, res, next){
     Client.findByIdAndRemove({_id: req.params.id}) //the mongo method will try to mach the ':id' in the URL to the _id in the database
         .then(function(client){ // then it will remove the client with the match

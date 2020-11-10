@@ -11,7 +11,7 @@ const ClientSchema = new mongoose.Schema ({
          required: true,
      },
      */
-    _id: mongoose.Schema.Types.ObjectId,
+    //_id: mongoose.Schema.Types.ObjectId,
     firstName: {
         type: String,
         required: true,
