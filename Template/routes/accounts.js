@@ -55,9 +55,9 @@ router.get('/:id', async (req, res) => { //async fordi den venter på CREATE CLI
     });
 
 // [4] ÆNDRE EN KONTO. DET ER KUN BALANCEN SOM KAN ÆNDRES (OBS! SE OM MAN KUN KAN ÆNDRE PÅ BALANCE SENERE)
-router.put('/update', function (req, res, next) {
-    Account.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(account){ //findByIdAndUpdate finder brugeren i databasen og opdatere dens oplysninger. Selve funktionen indtager et "id" som parameter. Her specificeres den ønskede id som skal opdateres. "req.body" angiver det body som opdatere den eksisterende information i databasen
-        Client.findOne({_id: req.params.id}).then(function(account){ //
+router.put('/:id', function (req, res, next) {
+    Account.findByIdAndUpdate({_id: req.params.id}, {$set: {"balance": req.body.balance}}).then(function(account){
+        Account.findOne({_id: req.params.id}).then(function (account) {
             res.send({account});
         });
     });
@@ -83,8 +83,11 @@ router.get('/:id/balance', async (req, res) => {
 
 // [7] ACCOUNT TRANSFER (PENDING)
 router.put('/transfer', function(req, res, next) {
-});
-
-
+    Account.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(account){
+        Account.findOne({_id: req.params.id}).then(function(account){
+            res.send({account});
+        })
+    })
+    });
 
 module.exports = router;
