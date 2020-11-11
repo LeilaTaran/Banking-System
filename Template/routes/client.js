@@ -26,7 +26,7 @@ router.get('/', async (req, res) => { //async fordi den venter på CREATE CLIENT
 });
 
 // [2] OPRETTE EN NY KUNDE
-router.post('/create', function(req,res){
+router.post('/', function(req,res){
     Client.create(req.body).then(function(client){
         res.send(client); //creates new instance of client-object and saves it in the database
     });
@@ -75,9 +75,8 @@ router.put('/:id', function (req, res, next) {
     });
 });
 
-
 // [5] SLETTE KUNDEN MED DET SPECIFIKKE ID
-router.delete('/delete/:id', function(req, res, next){
+router.delete('/:id', function(req, res, next){
     Client.findByIdAndRemove({_id: req.params.id}) //the mongo method will try to mach the ':id' in the URL to the _id in the database
         .then(function(client){ // then it will remove the client with the match
         res.send(client); // we want to send the client which we delete, and the record has been deleted from the database

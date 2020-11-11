@@ -1,9 +1,6 @@
 // custom modules
 const express = require('express');
 const mongoose = require('mongoose');
-const https = require('https');
-const path = require('path');
-const fs = require('fs');
 const router = express.Router();
 const app = express();
 const bodyParser = require('body-parser');
@@ -18,13 +15,6 @@ mongoose.connect('mongodb://localhost:27017/bankingSystem', {
     useUnifiedTopology: true,
 });
 
-//SERVER
-const sslServer = https.createServer({key:fs.readFileSync(path.join(__dirname, 'CK', 'key.pem')), cert: fs.readFileSync(path.join(__dirname, 'CK', 'cert.pem')) }, app);
-
-//This application will listen on port 3443
-sslServer.listen(3443, () => {
-    console.log('Server listening on 3443');
-});
 
 //TESTER
 app.get('/', async (req, res) => {

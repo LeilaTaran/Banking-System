@@ -7,7 +7,7 @@ const Client = require('../models/client');
 const router = express.Router();
 
 // [1] RETURNERER ET ARRAY AF ALLE KONTI
-router.get('/hent', async (req, res) => { //async fordi den venter på CREATE CLIENT løber igennem, før vi kan return clients
+router.get('/', async (req, res) => { //async fordi den venter på CREATE CLIENT løber igennem, før vi kan return clients
     try {
         // 1. return clients from database instead
         return res.json(await Account.find({})
@@ -64,7 +64,7 @@ router.put('/:id', function (req, res, next) {
 });
 
 // [5] SLETTE EN KONTO MED DET SPECIFIKKE ID
-router.delete('/delete/:id', function(req, res, next){
+router.delete('/:id', function(req, res, next){
     Account.findByIdAndRemove({_id: req.params.id}) //the mongo method will try to mach the ':id' in the URL to the _id in the database
         .then(function(account){ // then it will remove the client with the match
             res.send(account); // we want to send the client which we delete, and the record has been deleted from the database
