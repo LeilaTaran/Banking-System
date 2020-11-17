@@ -4,7 +4,9 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const app = express();
 const bodyParser = require('body-parser');
-
+const path = require('path');
+const fs = require('fs');
+const https = require('https');
 
 app.use(bodyParser.json()); // body-parser can parse different kinds of body-forms, we want to accept JSON-data
 
@@ -15,6 +17,19 @@ mongoose.connect('mongodb://localhost:27017/bankingSystem', {
     useUnifiedTopology: true,
 });
 
+var seaport = require('seaport');
+var seaportConnect = seaport.connect('localhost', 9090);
+
+//SERVER
+const sslServer = https.createServer({key:fs.readFileSync(path.join(__dirname, 'CK', 'key.pem')),
+    cert: fs.readFileSync(path.join(__dirname, 'CK', 'cert.pem'))}, app);
+
+
+//This application will listen on port 3443
+sslServer.listen(seaportConnect.register('sslServer'), function() {
+    console.log(this.address().port);
+    console.log('server running');
+});
 
 //TESTER
 app.get('/', async (req, res) => {
@@ -49,7 +64,6 @@ app.use('/', (req, res) => {
 app.use('/', (req, res) => {
     res.end("WELCOME")
 });
-
 
 
 
