@@ -25,26 +25,26 @@ router.get('/', async (req, res) => { //async fordi den venter på CREATE CLIENT
     }
 });
 
-// [2] OPRETTE EN NY KUNDE
+/* [2] OPRETTE EN NY KUNDE
 router.post('/', function(req,res){
     Client.create(req.body).then(function(client){
         res.send(client); //creates new instance of client-object and saves it in the database
     });
-});
+}); */
 
-/* [2] OPRETTE EN NY KUNDE GAMMEL
-router.post('/create/:firstName/:lastName/:street_address/:city', (req, res, next) => {
+// [2] OPRETTE EN NY KUNDE GAMMEL
+router.post('/create', (req, res, next) => {
     const client =  new Client({
         _id: new mongoose.Types.ObjectId(),
-        firstName: req.params.firstName,
-        lastName: req.params.lastName,
-        street_address: req.params.street_address,
-        city: req.params.city,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        street_address: req.body.street_address,
+        city: req.body.city,
     });
     client.save().
     then(result => {
         console.log(result); // then we can see the result here
-        res.status(201).json({ //201 --> den er gået igennem
+        res.status(208).json({ //201 --> den er gået igennem
             message: 'Client created'
         });
     })
@@ -54,7 +54,8 @@ router.post('/create/:firstName/:lastName/:street_address/:city', (req, res, nex
                 error: err
             })
         });
-}); */
+});
+
 
 // [3] RETURNERER EN SPECIFIK KUNDE
 router.get('/:id', async (req, res) => { //async fordi den venter på CREATE CLIENT løber igennem, før vi kan return clients

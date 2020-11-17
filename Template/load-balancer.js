@@ -2,13 +2,17 @@ const https = require('https');
 const httpProxy = require('http-proxy');
 const seaport = require('seaport');
 
+const path = require('path');
+const fs = require('fs');
+
 var seaportConnect = seaport.connect('localhost', 9090);
 
 var proxy = new httpProxy.createProxyServer({});
 var i = - 1;
 
 var addresses = [];
-var server = https.createServer(function (req, res) {
+var server = https.createServer({key:fs.readFileSync(path.join(__dirname, 'CK', 'key.pem')),
+    cert: fs.readFileSync(path.join(__dirname, 'CK', 'cert.pem'))},function (req, res) {
     addresses = seaportConnect.query("sslServer");
     if (addresses.length == 0) {
         res.end("Connection closed");
