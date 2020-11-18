@@ -3,9 +3,36 @@ const express = require('express');
 const app = express();
 const router = express.Router();
 const Client = require('../models/client');
-const nodemon = require('nodemon');
 
-//TEST
+
+// [1] Hent alle eksisterende kunder
+
+router.get('/', async (req, res) => {
+    Client.find()
+        .exec()
+        .then(docs => {
+            res.status(200).json(docs);
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+});
+
+
+/* router.get('/', async (req, res) => {
+    try {
+        // 1. return accounts from database instead
+        return res.json(await Client.find({})
+            .exec());
+    } catch (err) {
+        console.log({ message: err.message })
+    }
+}); */
+
+/*TEST
 router.get('/test', async (req, res) => {
     try {
         res.end("This is a test")
@@ -23,7 +50,7 @@ router.get('/', async (req, res) => { //async fordi den venter på CREATE CLIENT
     } catch (err) {
         console.log({ message: err.message })
     }
-});
+}); */
 
 /* [2] OPRETTE EN NY KUNDE
 router.post('/', function(req,res){
@@ -33,8 +60,25 @@ router.post('/', function(req,res){
 }); */
 
 // [2] OPRETTE EN NY KUNDE GAMMEL
-router.post('/create', (req, res, next) => {
-    const client =  new Client({
+router.post('/', (req, res, next) => {
+    // For IKKE at skulle sende et ID med i body'en, så oprettes der et ID til en client
+    const _id = new mongoose.Types.ObjectId;
+    req.body._id = _id;
+    // Ud fra bodyen'en, så henter systemet de enkelte parametre, som skal bruges til oprettelse af en bruger
+    Client.create(req.body).then(function(client){
+        res.send(client);
+        res.status(200);// Opretter en ny instans af et client-objekt og sender det til klienten
+    })
+    // Hvis oprettelsen af klienten ikke lykkedes, catcher vi fejlen
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err,
+                message: 'Fejl i oprettelsen'
+            });
+        });
+});
+   /* const client =  new Client({
         _id: new mongoose.Types.ObjectId(),
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -44,7 +88,7 @@ router.post('/create', (req, res, next) => {
     client.save().
     then(result => {
         console.log(result); // then we can see the result here
-        res.status(208).json({ //201 --> den er gået igennem
+        res.status(200).json({ //201 --> den er gået igennem
             message: 'Client created'
         });
     })
@@ -56,11 +100,14 @@ router.post('/create', (req, res, next) => {
         });
 });
 
+    */
+
 
 // [3] RETURNERER EN SPECIFIK KUNDE
 router.get('/:id', async (req, res) => { //async fordi den venter på CREATE CLIENT løber igennem, før vi kan return clients
     Client.findById({_id: req.params.id}).then(function(client){
-        res.send(client)
+        res.status(200);
+        res.send(client);
     });
 });
 
@@ -71,6 +118,7 @@ router.get('/:id', async (req, res) => { //async fordi den venter på CREATE CLI
 router.put('/:id', function (req, res, next) {
     Client.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(client){ //findByIdAndUpdate finder brugeren i databasen og opdatere dens oplysninger. Selve funktionen indtager et "id" som parameter. Her specificeres den ønskede id som skal opdateres. "req.body" angiver det body som opdatere den eksisterende information i databasen
         Client.findOne({_id: req.params.id}).then(function(client){ //
+            res.status(200);
             res.send({client});
         });
     });

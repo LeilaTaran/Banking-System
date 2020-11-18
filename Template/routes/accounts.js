@@ -8,14 +8,19 @@ const router = express.Router();
 
 // [1] RETURNERER ET ARRAY AF ALLE KONTI
 router.get('/', async (req, res) => { //async fordi den venter på CREATE CLIENT løber igennem, før vi kan return clients
-    try {
-        // 1. return clients from database instead
-        return res.json(await Account.find({})
-            .exec());
-    } catch (err) {
-        console.log({ message: err.message })
-    }
+    Account.find()
+        .exec()
+        .then(docs => {
+            res.status(200).json(docs);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
 });
+
 
 // [2] OPRETTE EN NY KONTO
 router.post('/', function(req, res){
