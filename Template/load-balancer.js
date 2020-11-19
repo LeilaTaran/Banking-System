@@ -28,5 +28,5 @@ server.listen(3443, function () {
     console.log("loadbalance is listening");
 });
 
-const serverRun = require('./app.js');
-serverRun;
+/* const serverRun = require('./app.js');
+serverRun; */

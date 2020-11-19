@@ -5,7 +5,6 @@ const router = express.Router();
 // Jeg laver et "account" skema
 const AccountSchema = new mongoose.Schema({
     // Alle som strings, udover "id"
-    //_id: mongoose.Schema.Types.ObjectId,
     client_id: {
         type: mongoose.Schema.ObjectId,
         ref: "Client",

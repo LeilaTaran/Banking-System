@@ -4,6 +4,8 @@ const app = express();
 const router = express.Router();
 const Client = require('../models/client');
 
+mongoose.set('useFindAndModify', false);
+
 
 // [1] Hent alle eksisterende kunder
 
@@ -106,7 +108,6 @@ router.post('/', (req, res, next) => {
 // [3] RETURNERER EN SPECIFIK KUNDE
 router.get('/:id', async (req, res) => { //async fordi den venter på CREATE CLIENT løber igennem, før vi kan return clients
     Client.findById({_id: req.params.id}).then(function(client){
-        res.status(200);
         res.send(client);
     });
 });
@@ -118,8 +119,7 @@ router.get('/:id', async (req, res) => { //async fordi den venter på CREATE CLI
 router.put('/:id', function (req, res, next) {
     Client.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(client){ //findByIdAndUpdate finder brugeren i databasen og opdatere dens oplysninger. Selve funktionen indtager et "id" som parameter. Her specificeres den ønskede id som skal opdateres. "req.body" angiver det body som opdatere den eksisterende information i databasen
         Client.findOne({_id: req.params.id}).then(function(client){ //
-            res.status(200);
-            res.send({client});
+            res.status(200).json(client);
         });
     });
 });
@@ -128,7 +128,8 @@ router.put('/:id', function (req, res, next) {
 router.delete('/:id', function(req, res, next){
     Client.findByIdAndRemove({_id: req.params.id}) //the mongo method will try to mach the ':id' in the URL to the _id in the database
         .then(function(client){ // then it will remove the client with the match
-        res.send(client); // we want to send the client which we delete, and the record has been deleted from the database
+            res.status(200);
+            res.send(client); // we want to send the client which we delete, and the record has been deleted from the database
     });
 });
 

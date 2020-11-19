@@ -10,8 +10,7 @@ const ClientSchema = new mongoose.Schema ({
          type: objectId,
          required: true,
      },
-     */
-    //_id: mongoose.Schema.Types.ObjectId,
+    */
     firstName: {
         type: String,
         required: true,

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "./node_modules/.bin/mocha --timeout 10000 --exit",
     "seaport": "./node_modules/.bin/seaport",
-    "start": "./run.sh"
+    "start": "concurrently \"cd ./Template && node load-balancer.js\" \"cd ./Template && node app.js\" \"cd ./Template && node app.js\" \"npm run seaport listen 9090\""
   },
   "author": "",
   "license": "ISC",
@@ -14,6 +14,7 @@
     "body-parser": "^1.19.0",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "concurrently": "^5.3.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "fs": "0.0.1-security",

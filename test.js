@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const fetch = require("node-fetch");
 const chai = require("chai");
 const should = chai.should();
-const config = require("./Template/app");
+// const config = require("./Template/app");
 // const expect = require('chai').expect;
 const chaiHttp = require("chai-http");
 const { expect } = require("chai");
@@ -287,12 +287,10 @@ describe("Account tests", () => {
                         .put(`/accounts/${latest._id}`)
                         .send({
                             balance: 100,
-                            alias: "EDITED",
                         })
                         .end((err, res) => {
                             res.should.have.status(200);
                             res.body.balance.should.be.equal(100);
-                            res.body.alias.should.be.equal("EDITED");
                             done();
                         });
                 });

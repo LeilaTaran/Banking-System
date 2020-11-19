@@ -6,6 +6,26 @@ const Account = require('../models/account');
 const Client = require('../models/client');
 const router = express.Router();
 
+mongoose.set('useFindAndModify', false);
+
+// [7] ACCOUNT TRANSFER (PENDING)
+router.put('/transfer', async (req, res, next) => {
+    //[7] Overfører penge fra en konto til en anden
+    const amount = parseInt(req.body.amount);
+    const fromAccount = await Account.findOneAndUpdate({_id: req.body.fromAccount },{$inc: { balance : -amount }},{useFindAndModify:false}).exec();
+    const toAccount = await Account.findOneAndUpdate({_id: req.body.toAccount }, {$inc: { balance : amount}}, {useFindAndModify:false}).exec();
+    res.status(200).json('transfered ' + amount + ' to ' + toAccount.alias + ' from ' + fromAccount.alias)
+});
+
+/* router.put('/transfer', function(req, res, next) {
+    Account.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(account){
+        Account.findOne({_id: req.params.id}).then(function(account){
+            res.status(200);
+            res.send({account});
+        });
+    });
+}); */
+
 // [1] RETURNERER ET ARRAY AF ALLE KONTI
 router.get('/', async (req, res) => { //async fordi den venter på CREATE CLIENT løber igennem, før vi kan return clients
     Account.find()
@@ -61,9 +81,9 @@ router.get('/:id', async (req, res) => { //async fordi den venter på CREATE CLI
 
 // [4] ÆNDRE EN KONTO. DET ER KUN BALANCEN SOM KAN ÆNDRES (OBS! SE OM MAN KUN KAN ÆNDRE PÅ BALANCE SENERE)
 router.put('/:id', function (req, res, next) {
-    Account.findByIdAndUpdate({_id: req.params.id}, {$set: {"balance": req.body.balance}}).then(function(account){
+    Account.findByIdAndUpdate({_id: req.params.id}, {$set: {balance: req.body.balance}}).then(function(account){
         Account.findOne({_id: req.params.id}).then(function (account) {
-            res.send({account});
+            res.status(200).json(account);
         });
     });
 });
@@ -86,13 +106,6 @@ router.get('/:id/balance', async (req, res) => {
         });
 });
 
-// [7] ACCOUNT TRANSFER (PENDING)
-router.put('/transfer', function(req, res, next) {
-    Account.findByIdAndUpdate({_id: req.params.id}, req.body).then(function(account){
-        Account.findOne({_id: req.params.id}).then(function(account){
-            res.send({account});
-        })
-    })
-    });
+
 
 module.exports = router;
