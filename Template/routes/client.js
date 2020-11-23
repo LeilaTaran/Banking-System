@@ -6,34 +6,6 @@ const Client = require('../models/client');
 
 mongoose.set('useFindAndModify', false);
 
-
-// [1] Hent alle eksisterende kunder
-
-router.get('/', async (req, res) => {
-    Client.find()
-        .exec()
-        .then(docs => {
-            res.status(200).json(docs);
-        })
-        .catch(err =>{
-            console.log(err);
-            res.status(500).json({
-                error: err
-            });
-        });
-});
-
-
-/* router.get('/', async (req, res) => {
-    try {
-        // 1. return accounts from database instead
-        return res.json(await Client.find({})
-            .exec());
-    } catch (err) {
-        console.log({ message: err.message })
-    }
-}); */
-
 /*TEST
 router.get('/test', async (req, res) => {
     try {
@@ -54,6 +26,21 @@ router.get('/', async (req, res) => { //async fordi den venter på CREATE CLIENT
     }
 }); */
 
+// [1] Hent alle eksisterende kunder
+router.get('/', async (req, res) => { //async fordi den venter på CREATE CLIENT løber igennem, før vi kan return clients
+    Client.find()
+        .exec() //vi eksekvere alle vores accounts
+        .then(client => {
+            res.status(200).json(client);
+        })
+        .catch(err =>{
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
+});
+
 /* [2] OPRETTE EN NY KUNDE
 router.post('/', function(req,res){
     Client.create(req.body).then(function(client){
@@ -66,12 +53,12 @@ router.post('/', (req, res, next) => {
     // For IKKE at skulle sende et ID med i body'en, så oprettes der et ID til en client
     const _id = new mongoose.Types.ObjectId;
     req.body._id = _id;
-    // Ud fra bodyen'en, så henter systemet de enkelte parametre, som skal bruges til oprettelse af en bruger
+    // Vi henter de paramtrerne fra vores body, for at kunne oprette en client
     Client.create(req.body).then(function(client){
         res.send(client);
         res.status(200);// Opretter en ny instans af et client-objekt og sender det til klienten
     })
-    // Hvis oprettelsen af klienten ikke lykkedes, catcher vi fejlen
+    // vi benytter catch for at se, hvilken fejl vi støder på i tilfælde af clienten ikke oprettes
         .catch(err => {
             console.log(err);
             res.status(500).json({
@@ -104,10 +91,9 @@ router.post('/', (req, res, next) => {
 
     */
 
-
 // [3] RETURNERER EN SPECIFIK KUNDE
 router.get('/:id', async (req, res) => { //async fordi den venter på CREATE CLIENT løber igennem, før vi kan return clients
-    Client.findById({_id: req.params.id}).then(function(client){
+    Client.findById({_id: req.params.id}).then(function(client){ // vi finder en specifik kunde gennem det unikke id tildelt til hver client.
         res.send(client);
     });
 });
@@ -126,10 +112,10 @@ router.put('/:id', function (req, res, next) {
 
 // [5] SLETTE KUNDEN MED DET SPECIFIKKE ID
 router.delete('/:id', function(req, res, next){
-    Client.findByIdAndRemove({_id: req.params.id}) //the mongo method will try to mach the ':id' in the URL to the _id in the database
-        .then(function(client){ // then it will remove the client with the match
+    Client.findByIdAndRemove({_id: req.params.id}) //mongo-metoden vil matche ':id' i URL'en til det _id der oprettes i databasen
+        .then(function(client){ // herefter slettes kunden med det matchede med
             res.status(200);
-            res.send(client); // we want to send the client which we delete, and the record has been deleted from the database
+            res.send(client); // vi eksekvere den client, der slettes fra databasen, og vi vil nu ikke kunne finde clienten længere.
     });
 });
 

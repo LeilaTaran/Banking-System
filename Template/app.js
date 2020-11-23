@@ -1,7 +1,6 @@
 // custom modules
 const express = require('express');
 const mongoose = require('mongoose');
-const router = express.Router();
 const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
@@ -21,8 +20,8 @@ var seaport = require('seaport');
 var seaportConnect = seaport.connect('localhost', 9090);
 
 //SERVER
-const sslServer = https.createServer({key:fs.readFileSync(path.join(__dirname, 'CK', 'key.pem')),
-    cert: fs.readFileSync(path.join(__dirname, 'CK', 'cert.pem'))}, app);
+const sslServer = https.createServer({key:fs.readFileSync(path.join(__dirname, 'certificate', 'key.pem')),
+    cert: fs.readFileSync(path.join(__dirname, 'certificate', 'cert.pem'))}, app);
 
 
 //This application will listen on port 3443
@@ -40,7 +39,7 @@ app.get('/', async (req, res) => {
     };
 });
 
-//SEARCH CLIENT
+//SEARCH CLIENT TEST
 app.get('/search/:name/:lastname/:address/:cityy', (req,res) => {
     res.end('Fornavn: ' + req.params.name +
             ' Efternavn: ' + req.params.lastname +
@@ -64,43 +63,3 @@ app.use('/', (req, res) => {
 app.use('/', (req, res) => {
     res.end("WELCOME")
 });
-
-
-
-
-//Variables are created that contain controllers
-
-
-/*
-const createClient = require('./controllers/createClient');
-const deleteClient = require('./controllers/deleteClient');
-const updateClient = require('./controllers/updateClient');
-
-const createAccount = require('./controllers/createAccount');
-const deleteAccount = require('./controllers/deleteAccount');
-const updateAccount = require('./controllers/updateAccount'); */
-
-
-
-
-/*
-//POST requests
-app.post("/createClient/:client", createClient);
-
-app.post("/createAccount:account", createAccount);
-
-// PUT requests
-app.put('/updateClient/:client_updatedInfo', updateClient);
-
-app.put('/updateAccount/:account_updatedInfo', updateAccount);
-
-// DELETE requests
-app.delete('/deleteClient', deleteClient);
-app.delete('/deleteAccount/:account_id', deleteAccount);
-
-*/
-
-/* //Variables are created that contain controllers
-const createUser = require("./controllers/createUser");
-const createLesson = require ("./controllers/createLesson");
-const createBooking = require("./controllers/createBooking");*/

@@ -11,8 +11,8 @@ var proxy = new httpProxy.createProxyServer({});
 var i = - 1;
 
 var addresses = [];
-var server = https.createServer({key:fs.readFileSync(path.join(__dirname, 'CK', 'key.pem')),
-    cert: fs.readFileSync(path.join(__dirname, 'CK', 'cert.pem'))},function (req, res) {
+var server = https.createServer({key:fs.readFileSync(path.join(__dirname, 'certificate', 'key.pem')),
+    cert: fs.readFileSync(path.join(__dirname, 'certificate', 'cert.pem'))},function (req, res) {
     addresses = seaportConnect.query("sslServer");
     if (addresses.length == 0) {
         res.end("Connection closed");

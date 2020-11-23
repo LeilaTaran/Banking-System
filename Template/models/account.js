@@ -6,7 +6,7 @@ const router = express.Router();
 const AccountSchema = new mongoose.Schema({
     // Alle som strings, udover "id"
     client_id: {
-        type: mongoose.Schema.ObjectId,
+        type: mongoose.Schema.ObjectId, 
         ref: "Client",
         required: true
     },
