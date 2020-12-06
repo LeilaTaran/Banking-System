@@ -16,5 +16,25 @@ I dette forløb udvikles et simpelt banksystem til en bankkassere, der har til f
 * Slet en account
 
 # IMPLEMENTERING
-### Step 1 - Installere NPM 
-Kør "npm install" fra mappen Banking-System
+### Step 1 - Installer NPM 
+Kør "npm install" fra mappen "\Banking-System", for at installere vores dependencies. 
+```bash
+npm install 
+```
+
+### Step 2 - filerne eksekveres
+Kør "nmp start" i mappen "\Template" for at eksekvere følgende kommanoder:
+* "npm run listen 9090"
+* "load-balancer.js"
+* "app.js" x2 --> 2 servere starter 
+```bash
+npm start 
+```
+
+### Step 3 - Test-filen
+Kør "npm test" fra mappen "\Banking-System", for at teste systemet.
+
+```bash
+npm test
+```
+Hvis alt fungere vil der udskrives 15 passings.
