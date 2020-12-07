@@ -16,13 +16,21 @@ I dette forløb udvikles et simpelt banksystem til en bankkassere, der har til f
 * Slet en account
 
 # IMPLEMENTERING
-### Step 1 - Installer NPM 
+### Step 1 - Ændre URL for databasen
+For at kunne køre programmet på egen PC, er det nødvendigt at ændre database URL'en følgende stedet:
+* test.js filen - linje 16
+* app.js filen - linje 13
+
+Følgende URL kan eventuelt tilpasses:
+indsæt url:
+
+### Step 2 - Installer NPM 
 Kør "npm install" fra mappen "\Banking-System", for at installere vores dependencies. 
 ```bash
 npm install 
 ```
 
-### Step 2 - filerne eksekveres
+### Step 3 - filerne eksekveres
 Kør "nmp start" i mappen "\Template" for at eksekvere følgende kommanoder:
 * "npm run listen 9090"
 * "load-balancer.js"
@@ -31,7 +39,7 @@ Kør "nmp start" i mappen "\Template" for at eksekvere følgende kommanoder:
 npm start 
 ```
 
-### Step 3 - Test-filen
+### Step 4 - Test-filen
 Kør "npm test" fra mappen "\Banking-System", for at teste systemet.
 
 ```bash
